@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use serde::Deserialize;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -18,7 +17,7 @@ fn App() -> Element {
     }
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct BtsPhl {
     #[serde(rename = "type")]
     typ: String,
@@ -26,14 +25,14 @@ struct BtsPhl {
     features: Vec<Feature>,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct Feature {
     #[serde(rename = "type")]
     typ: String,
     properties: Vec<Property>,
 }
 
-#[derive(serde::Deserialize)]
+#[derive(serde::Deserialize, Debug)]
 struct Property {
     id: u64,
     name: String,
@@ -41,30 +40,21 @@ struct Property {
 
 #[component]
 pub fn Hero() -> Element {
-    use_future(|_| async move {
+    let fetch_new = move |_: Event<MouseData>| async move {
         let response = reqwest::get("https://bts-status.bicycletransit.workers.dev/phl")
-            .await?
+            .await
+            .unwrap()
             .text()
-            .await?;
-        let json: BtsPhl = serde_json::from_str(&response)?;
-        dbg!(json);
-    });
+            .await
+            .unwrap();
+        println!("{:?}", response);
+    };
 
     rsx! {
         div {
             id: "hero",
             img { src: HEADER_SVG, id: "header" }
-            // div {
-            //     p { "something else entirely" }
-            // }
-            div { id: "links",
-                a { href: "https://dioxuslabs.com/learn/0.6/", "📚 Learn Dioxus" }
-                a { href: "https://dioxuslabs.com/awesome", "🚀 Awesome Dioxus" }
-                a { href: "https://github.com/dioxus-community/", "📡 Community Libraries" }
-                a { href: "https://github.com/DioxusLabs/sdk", "⚙️ Dioxus Development Kit" }
-                a { href: "https://marketplace.visualstudio.com/items?itemName=DioxusLabs.dioxus", "💫 VSCode Extension" }
-                a { href: "https://discord.gg/XgGxMSkvUM", "👋 Community Discord" }
-            }
+            button { id: "fetch", onclick: fetch_new }
         }
     }
 }
