@@ -62,9 +62,12 @@ pub fn Hero() -> Element {
             id: "hero",
             img { src: HEADER_SVG, id: "header" }
             button { id: "fetch", onclick: fetch_new }
-            ul {
+            div {
                 for feat in json_features.iter() {
-                    li { "{feat:?}" }
+                    p {
+                        font_family: "monospace",
+                        "{feat:?}"
+                    }
                 }
             }
         }
