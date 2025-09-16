@@ -1,4 +1,4 @@
-use dioxus::{logger::tracing, prelude::*};
+use dioxus::prelude::*;
 use serde_json::{Map, Value};
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -18,7 +18,7 @@ fn App() -> Element {
     }
 }
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize)]
 struct BtsPhl {
     last_updated: String,
     features: Vec<Feature>,
