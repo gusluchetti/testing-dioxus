@@ -4320,6 +4320,7 @@ dependencies = [
  "dioxus",
  "reqwest",
  "serde",
+ "serde_json",
 ]
 
 [[package]]
